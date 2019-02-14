@@ -1,0 +1,83 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.bmuschko.docker-remote-api' version '3.2.4'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://nexus-dev-v-repo-0001:8081/repository/maven-public/'
+    }
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+version = '0.1'
+sourceCompatibility = '1.8'
+
+def vertxVersion = '3.5.4'
+
+dependencies {
+
+    compile "io.vertx:vertx-core:${vertxVersion}"
+
+    compile 'com.spotify:flo-workflow:0.5.8'
+}
+
+def appEnviroment = System.getenv("APP_ENVIROMENT") ?: "ide"
+def appRuntime = System.getenv("APP_RUNTIME") ?: "cmd-line"
+def logbackFile
+
+
+if (appRuntime.equalsIgnoreCase("docker")) {
+    logbackFile = "/opt/${project.name}/conf/logback.xml"
+} else {
+    logbackFile = "src/main/conf/logback.xml"
+}
+
+applicationDefaultJvmArgs = [
+//        "-agentpath:/opt/libyjpagent.so=listen=0.0.0.0:10060",
+"-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory",
+"-Dlogback.configurationFile=${logbackFile}",
+"-Dapp.runtime=${appRuntime}"
+]
+
+// Vert.x watches for file changes in all subdirectories
+// of src/ but only for files with .java extension
+def watchForChange = 'src/**/*.java'
+
+// Vert.x will call this task on changes
+def doOnChange
+if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+    doOnChange = '.\\gradlew classes'
+} else {
+    doOnChange = './gradlew classes'
+}
+
+def javaOpts = applicationDefaultJvmArgs.join(' ')
+
+mainClassName = 'io.vertx.core.Launcher'
+def mainVerticle = 'com.raange.Main'
+
+run {
+    args = [
+            'run',
+            "$mainVerticle",
+            "-conf src/main/conf/conf-${appEnviroment}.json",
+            "--java-opts=$javaOpts",
+            "--redeploy=$watchForChange",
+            "--launcher-class=$mainClassName",
+            "--on-redeploy=$doOnChange"]
+}
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes 'Main-Verticle': "$mainVerticle"
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
