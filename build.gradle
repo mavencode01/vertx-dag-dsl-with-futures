@@ -59,7 +59,7 @@ if (System.getProperty("os.name").toLowerCase().contains("windows")) {
 def javaOpts = applicationDefaultJvmArgs.join(' ')
 
 mainClassName = 'io.vertx.core.Launcher'
-def mainVerticle = 'com.raange.Main'
+def mainVerticle = 'com.xxx.Main'
 
 run {
     args = [
