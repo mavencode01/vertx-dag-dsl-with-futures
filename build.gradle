@@ -6,6 +6,7 @@ plugins {
 }
 
 repositories {
+    jcenter()
     mavenCentral()
     maven {
         url 'http://nexus-dev-v-repo-0001:8081/repository/maven-public/'
@@ -22,8 +23,16 @@ def vertxVersion = '3.5.4'
 dependencies {
 
     compile "io.vertx:vertx-core:${vertxVersion}"
+    compile group: 'edu.princeton.cs', name: 'algs4', version: '1.0.3'
 
-    compile 'com.spotify:flo-workflow:0.5.8'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'ch.qos.logback:logback-core:1.2.3'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile('net.logstash.logback:logstash-logback-encoder:4.11') {
+        exclude group: 'org.slf4j'
+        exclude group: 'ch.qos.logback'
+    }
+    compile 'org.codehaus.janino:janino:3.0.6'
 }
 
 def appEnviroment = System.getenv("APP_ENVIROMENT") ?: "ide"
@@ -36,6 +45,9 @@ if (appRuntime.equalsIgnoreCase("docker")) {
 } else {
     logbackFile = "src/main/conf/logback.xml"
 }
+
+
+
 
 applicationDefaultJvmArgs = [
 //        "-agentpath:/opt/libyjpagent.so=listen=0.0.0.0:10060",

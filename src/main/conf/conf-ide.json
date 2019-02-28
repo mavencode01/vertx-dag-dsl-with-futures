@@ -1,19 +1,2 @@
 {
-  "tasks": [
-    {
-      "name": "task1",
-      "sleepTime": 1000,
-      "fail": false
-    },
-    {
-      "name": "task2",
-      "sleepTime": 1000,
-      "fail": false
-    },
-    {
-      "name": "task3",
-      "sleepTime": 1000,
-      "fail": false
-    }
-  ]
 }
