@@ -16,7 +16,7 @@ The tasks do not have to deal with any composition. Simply implement the **run()
 
 ```
 /**
- * This class does nothing and completes immediately.
+ * This is a simple task that does nothing and completes immediately.
  */
 public class SimpleTask extends Task {
     public SimpleTask(Vertx vertx, JsonObject definition) {
