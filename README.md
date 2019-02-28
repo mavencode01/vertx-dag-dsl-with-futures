@@ -3,7 +3,7 @@ Prototype dsl to build a dag using vertx.io futures.
 
 This an early attempt to build some sort of DSL to build a "DAG"/flow using vertx.io futures. You can create simple sequential flows or complex execution trees.
 
-Example flow:
+Example flow (See Main.class):
 
 ![Flow](
 https://raw.githubusercontent.com/javadevmtl/vertx-dag-dsl-with-futures/master/flow.png)
