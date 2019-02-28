@@ -25,8 +25,6 @@ public class SimpleTask extends Task {
 
     public SimpleTask(Vertx vertx, JsonObject definition, Task next) {
         super(vertx, definition, next);
-
-        this.delay = this.definition.getJsonObject("config").getLong("delay");
     }
 
     @Override
